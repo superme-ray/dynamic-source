@@ -1,0 +1,45 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: dyamic-source
+
+  datasource:
+    dynamic:
+      primary: master        # 指定默认数据源名称
+      strict: false #严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      datasource:
+        master:
+#          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/xa?useUnicode=true&characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+          username: root
+          password: 123456
+        slave:
+#          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/xa2?useUnicode=true&characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+          username: root
+          password: 123456
+
+
+mybatis-plus:
+  mapperLocations: classpath:mapper/*.xml
+  typeAliasesPackage: com.ljy.dynamicdatasource.entity
+  configuration:
+    #使全局的映射器启用或禁用缓存
+    cache-enabled: true
+    #全局启用或禁用延迟加载。当禁用时，所有关联对象都会即时加载。
+    lazy-loading-enabled: true
+    #设置超时时间，它决定数据库驱动等待数据库响应的秒数。
+    default-statement-timeout: 25
+    #为驱动的结果集获取数量（fetchSize）设置一个建议值。此参数只可以在查询设置中被覆盖。
+    default-fetch-size: 100
+    #使用驼峰命名法转换字段。
+    map-underscore-to-camel-case: true
+    #MyBatis 利用本地缓存机制（Local Cache）防止循环引用和加速重复的嵌套查询。
+    #默认值为 SESSION，会缓存一个会话中执行的所有查询。
+    #若设置值为 STATEMENT，本地缓存将仅用于执行语句，对相同 SqlSession 的不同查询将不会进行缓存。
+    local-cache-scope: session
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
